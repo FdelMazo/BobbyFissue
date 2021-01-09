@@ -9,13 +9,24 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.event.issue.title, '[CHESS]')
     steps:
+      - name: Randomize Player Color
+        id: color
+        run: |
+          res=$(($RANDOM%2))
+          if [[ ${res} -eq 0 ]]; then
+              echo "::set-output name=white::${{ github.event.issue.repository.owner.login }}\n"
+              echo "::set-output name=black::${{ github.event.issue.user.login }}\n"
+          elif [[ ${res} -eq 1 ]]; then
+              echo "::set-output name=white::${{ github.event.issue.user.login }}\n"
+              echo "::set-output name=black::${{ github.event.issue.repository.owner.login }
+          fi
       - name: Add Comment w/Player Pieces
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
             ### New Game!
-            @user1 (white) vs @user2 (black)
+            @${{ steps.color.output.white }} (white) vs @${{ steps.color.output.black }} (black)
       - name: Add Comment w/Board
         uses: peter-evans/create-or-update-comment@v1
         with:
