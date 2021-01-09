@@ -19,6 +19,6 @@ jobs:
       - name: Edit Board Comment
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ steps.vars.outputs.board-comment-id }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
           body: |
             **Edit:** Some additional info
