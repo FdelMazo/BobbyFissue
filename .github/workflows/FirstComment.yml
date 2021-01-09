@@ -30,7 +30,7 @@ jobs:
       - name: Create initial board
         id: board
         run: |
-          BOARD="$(perl -lpe 's/\d/$"x$&/eg;s/|/|/g;y;/;' <<< "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" | tac | nl -w 1 | tac)"
+          BOARD="$(python ./scripts/fen2md.py 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')"
           BOARD="${BOARD//'%'/'%25'}"
           BOARD="${BOARD//$'\n'/'%0A'}"
           BOARD="${BOARD//$'\r'/'%0D'}"
