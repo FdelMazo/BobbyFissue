@@ -14,11 +14,10 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.issue.number }}
-          body-includes: Made
-      - run: echo ::set-output name=board-comment-id::$(echo ${{ steps.fc.outputs.comment-id }})
+          body-includes: Made with BobbyFissue
       - name: Edit Board Comment
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           body: |
-            **Edit:** Some additional info
+            **Edit:** Even some more additional info
