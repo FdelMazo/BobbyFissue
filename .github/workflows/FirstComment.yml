@@ -31,7 +31,8 @@ jobs:
       - name: Create initial board
         id: board
         run: |
-          BOARD="$(python3 ${GITHUB_WORKSPACE}/scripts/fen2md.py 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')"
+          BOARD="$(python3 ./scripts/fen2md.py 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')"
+          BOARD="$(python3 ./scripts/replace_images.py ${BOARD})"
           BOARD="${BOARD//'%'/'%25'}"
           BOARD="${BOARD//$'\n'/'%0A'}"
           BOARD="${BOARD//$'\r'/'%0D'}"
@@ -43,6 +44,4 @@ jobs:
           body: |
             ### Board: White to Play
 
-            | |A|B|C|D|E|F|G|H|
-            |-|-|-|-|-|-|-|-|-|
             ${{ steps.board.outputs.board }}
