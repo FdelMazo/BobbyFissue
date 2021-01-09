@@ -18,7 +18,7 @@ jobs:
               echo "::set-output name=black::${{ github.event.issue.user.login }}\n"
           elif [[ ${res} -eq 1 ]]; then
               echo "::set-output name=white::${{ github.event.issue.user.login }}\n"
-              echo "::set-output name=black::${{ github.event.issue.repository.owner.login }
+              echo "::set-output name=black::${{ github.event.issue.repository.owner.login }}\n"
           fi
       - name: Add Comment w/Player Pieces
         uses: peter-evans/create-or-update-comment@v1
