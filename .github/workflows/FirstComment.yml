@@ -29,7 +29,12 @@ jobs:
             @${{ steps.color.outputs.white }} (white) vs @${{ steps.color.outputs.black }} (black)
       - name: Create initial board
         id: board
-        run: echo "::set-output name=board::$(perl -lpe 's/\d/$"x$&/eg;s/|/|/g;y;/;' <<< "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" | tac | nl -w 1 | tac)"
+        run: |
+          BOARD="$(perl -lpe 's/\d/$"x$&/eg;s/|/|/g;y;/;' <<< "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" | tac | nl -w 1 | tac)"
+          BOARD="${BOARD//'%'/'%25'}"
+          BOARD="${BOARD//$'\n'/'%0A'}"
+          BOARD="${BOARD//$'\r'/'%0D'}"
+          echo "::set-output name=board::$BOARD"
       - name: Add Comment w/Board
         uses: peter-evans/create-or-update-comment@v1
         with:
