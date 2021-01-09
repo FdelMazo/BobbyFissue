@@ -14,7 +14,7 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.issue.number }}
-          comment-author: github-actions
+          body-includes: Made
       - run: echo ::set-output name=board-comment-id::$(echo ${{ steps.fc.outputs.comment-id }})
       - name: Edit Board Comment
         uses: peter-evans/create-or-update-comment@v1
