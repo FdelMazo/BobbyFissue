@@ -30,9 +30,7 @@ jobs:
       - name: Create initial board
         id: board
         run: |
-          ls
-          chmod +x ./scripts/fen2md.py
-          BOARD="$(python ./scripts/fen2md.py 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')"
+          BOARD="$(python ${GITHUB_WORKSPACE}/scripts/fen2md.py 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')"
           BOARD="${BOARD//'%'/'%25'}"
           BOARD="${BOARD//$'\n'/'%0A'}"
           BOARD="${BOARD//$'\r'/'%0D'}"
