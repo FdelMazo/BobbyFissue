@@ -1,0 +1,23 @@
+name: "UpdateBoard"
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.issue.title, '[CHESS]')
+    steps:
+      - name: Find Board Comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment-author: github-actions
+      - name: Edit Board Comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body: |
+            **Edit:** Some additional info

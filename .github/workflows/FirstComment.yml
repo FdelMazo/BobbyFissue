@@ -1,4 +1,4 @@
-name: "BobbyFissue"
+name: "FirstComment"
 
 on:
   issues:
@@ -14,5 +14,4 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            This is a multi-line test comment
-            - With GitHub **Markdown** :sparkles:
+            Made with [BobbyFissue](https://github.com/FdelMazo/BobbyFissue)
