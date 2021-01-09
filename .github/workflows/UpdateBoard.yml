@@ -18,6 +18,7 @@ jobs:
       - name: Edit Board Comment
         uses: peter-evans/create-or-update-comment@v1
         with:
+          issue-number: ${{ github.event.issue.number }}
           comment-id: ${{ steps.fc.outputs.comment-id }}
           body: |
             **Edit:** Some additional info
