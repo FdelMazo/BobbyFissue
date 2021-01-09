@@ -15,10 +15,10 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           comment-author: github-actions
+      - run: echo ::set-output name=board-comment-id::$(echo ${{ steps.fc.outputs.comment-id }})
       - name: Edit Board Comment
         uses: peter-evans/create-or-update-comment@v1
         with:
-          issue-number: ${{ github.event.issue.number }}
-          comment-id: ${{ steps.fc.outputs.comment-id }}
+          comment-id: ${{ steps.vars.outputs.board-comment-id }}
           body: |
             **Edit:** Some additional info
