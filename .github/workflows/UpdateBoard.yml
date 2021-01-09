@@ -14,10 +14,13 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.issue.number }}
-          body-includes: Made with [BobbyFissue](https://github.com/FdelMazo/BobbyFissue)
+          comment-author: "github-actions[bot]"
+          body-includes: "### Board"
       - name: Edit Board Comment
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
           body: |
-            **Edit:** Even some more additional info
+            ### Board: ${{ steps.fc.outputs.comment-id }} to Play
+            <Board Representation>

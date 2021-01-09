@@ -9,9 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.event.issue.title, '[CHESS]')
     steps:
+      - name: Add Comment w/Player Pieces
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ### New Game!
+            @user1 (white) vs @user2 (black)
       - name: Add Comment w/Board
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            Made with [BobbyFissue](https://github.com/FdelMazo/BobbyFissue)
+            ### Board: White to Play
+            <Initial Board Representation>
