@@ -14,11 +14,11 @@ jobs:
         run: |
           res=$(($RANDOM%2))
           if [[ ${res} -eq 0 ]]; then
-              echo "::set-output name=white::${{ github.event.repository.owner.login }}\n"
-              echo "::set-output name=black::${{ github.event.issue.user.login }}\n"
+              echo "::set-output name=white::${{ github.event.repository.owner.login }}"
+              echo "::set-output name=black::${{ github.event.issue.user.login }}"
           elif [[ ${res} -eq 1 ]]; then
-              echo "::set-output name=white::${{ github.event.issue.user.login }}\n"
-              echo "::set-output name=black::${{ github.event.repository.owner.login }}\n"
+              echo "::set-output name=white::${{ github.event.issue.user.login }}"
+              echo "::set-output name=black::${{ github.event.repository.owner.login }}"
           fi
       - name: Add Comment w/Player Pieces
         uses: peter-evans/create-or-update-comment@v1
@@ -27,10 +27,16 @@ jobs:
           body: |
             ### New Game!
             @${{ steps.color.outputs.white }} (white) vs @${{ steps.color.outputs.black }} (black)
+      - name: Create initial board
+        id: board
+        run: echo "::set-output name=board::$(perl -lpe 's/\d/$"x$&/eg;s/|/|/g;y;/;' <<< "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" | tac | nl -w 1 | tac)"
       - name: Add Comment w/Board
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
             ### Board: White to Play
-            <Initial Board Representation>
+
+            | |A|B|C|D|E|F|G|H|
+            |-|-|-|-|-|-|-|-|-|
+            ${{ steps.board.outputs.board }}
