@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.event.issue.title, '[CHESS]')
     steps:
+      - uses: actions/checkout@v2
       - name: Randomize Player Color
         id: color
         run: |
