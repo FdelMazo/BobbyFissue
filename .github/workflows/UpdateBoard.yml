@@ -14,7 +14,7 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.issue.number }}
-          body-includes: Made with BobbyFissue
+          body-includes: Made with [BobbyFissue](https://github.com/FdelMazo/BobbyFissue)
       - name: Edit Board Comment
         uses: peter-evans/create-or-update-comment@v1
         with:
