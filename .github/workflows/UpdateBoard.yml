@@ -38,7 +38,7 @@ jobs:
           echo "::set-output name=white::WHITE"
           echo "::set-output name=black::BLACK"
 
-      - name: Parse Move and Board
+      - name: Parse Board
         id: parser
         run: |
           CURRFEN="$(echo '${{ steps.fcb.outputs.comment-body }}' | grep -oP '(?<=`)(.*)(?=`)')"
@@ -61,17 +61,18 @@ jobs:
           if [ ${customfen} == "I" ]; then
               echo "::set-output name=invalid::true"
           elif [ ${customfen} == "W" ]; then
-            echo "::set-output name=finished::true"
             if [ ${toplay} == "w" ]; then
+                echo "::set-output name=winner::Black"
                 echo "::set-output name=header::Black Wins!"
             elif [ ${toplay} == "b" ]; then
+                echo "::set-output name=winner::White"
                 echo "::set-output name=header::White Wins!"
             fi
           elif [ ${customfen} == "D" ]; then
-            echo "::set-output name=finished::true"
+            echo "::set-output name=draw::true"
             echo "::set-output name=header::Draw!"
           fi
-      - name: Show Move
+      - name: Convert Move to md
         id: board
         run: |
           BOARD="$(python3 ./scripts/fen2md.py '${{steps.fen.outputs.fen}}' | python3 ./scripts/replace_images.py)"
@@ -97,7 +98,34 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: confused
       - name: Close finished games
-        if: ${{ steps.fen.outputs.finished }}
+        if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
         uses: peter-evans/close-issue@v1
         with:
           issue-number: ${{ github.event.issue.number }}
+      - name: Decide label
+        if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
+        id: labeler
+        run: |
+          if [[ ${{steps.fen.outputs.draw}} ]]; then
+              echo "::set-output name=label::draw"
+          elif [ ${{steps.fen.outputs.winner}} == "Black" ]; then
+            if [ ${{steps.colors.outputs.black}} == ${{ github.event.repository.owner.login }} ]; then
+              echo "::set-output name=label::win"
+            fi
+            if [ ${{steps.colors.outputs.black}} == ${{ github.event.issue.user.login }} ]; then
+              echo "::set-output name=label::lose"
+            fi
+          elif [ ${{steps.fen.outputs.winner}} == "White" ]; then
+            if [ ${{steps.colors.outputs.white}} == ${{ github.event.repository.owner.login }} ]; then
+              echo "::set-output name=label::win"
+            fi
+            if [ ${{steps.colors.outputs.white}} == ${{ github.event.issue.user.login }} ]; then
+              echo "::set-output name=label::lose"
+            fi
+          fi
+        - name: Apply Label to closed issue
+          uses: actions-ecosystem/action-add-labels@v1
+          if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
+          with:
+          github_token: ${{ secrets.github_token }}
+          labels: ${{steps.labeler.outputs.label}}
