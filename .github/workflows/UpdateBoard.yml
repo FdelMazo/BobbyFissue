@@ -44,13 +44,15 @@ jobs:
           if [ ${customfen} == "I" ]; then
               echo "::set-output name=invalid::true"
           elif [ ${customfen} == "W" ]; then
+            echo "::set-output name=finished::true"
             if [ ${toplay} == "w" ]; then
                 echo "::set-output name=header::Black Wins!"
             elif [ ${toplay} == "b" ]; then
                 echo "::set-output name=header::White Wins!"
             fi
           elif [ ${customfen} == "D" ]; then
-              echo "::set-output name=header::Draw!"
+            echo "::set-output name=finished::true"
+            echo "::set-output name=header::Draw!"
           fi
       - name: Show Move
         id: board
@@ -70,10 +72,14 @@ jobs:
             ### ${{ steps.fen.outputs.header }}
             `${{steps.fen.outputs.fen}}`
             ${{ steps.board.outputs.board }}
-
       - name: React to Invalid Moves
         if: ${{ steps.fen.outputs.invalid }}
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: confused
+      - name: Close finished games
+        if: ${{ steps.fen.outputs.finished }}
+        uses: peter-evans/close-issue@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
