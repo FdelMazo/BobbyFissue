@@ -24,17 +24,17 @@ jobs:
       - name: Parse Move and Board
         id: parser
         run: |
-          CURRFEN="$(echo "${{ steps.fc.outputs.comment-body }}" | grep '>' | tr -d '>`')"
+          CURRFEN="$(echo '${{ steps.fc.outputs.comment-body }}' | grep '>' | tr -d '>`')"
           echo "::set-output name=current_fen::$CURRFEN"
       - name: Play Move
         id: fen
         run: |
-          FEN="$(python3 ./scripts/chessmove.py ${{steps.parser.outputs.current_fen}} ${{steps.parser.outputs.next_move}}"
+          FEN="$(python3 ./scripts/chessmove.py '${{steps.parser.outputs.current_fen}}' '${{steps.parser.outputs.next_move}}'"
           echo "::set-output name=fen::$FEN"
       - name: Show Move
         id: board
         run: |
-          BOARD="$(python3 ./scripts/fen2md.py "${{steps.fen.outputs.fen}}" | python3 ./scripts/replace_images.py)"
+          BOARD="$(python3 ./scripts/fen2md.py '${{steps.fen.outputs.fen}}' | python3 ./scripts/replace_images.py)"
           BOARD="${BOARD//'%'/'%25'}"
           BOARD="${BOARD//$'\n'/'%0A'}"
           BOARD="${BOARD//$'\r'/'%0D'}"
