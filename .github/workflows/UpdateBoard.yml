@@ -33,8 +33,10 @@ jobs:
       - name: Find Player Colors
         id: colors
         run: |
-          echo "::set-output name=white::${{ github.event.repository.owner.login }}"
-          echo "::set-output name=black::${{ github.event.issue.user.login }}"
+          WHITE="$(echo '${{ steps.fcc.outputs.comment-body }}' | grep -oP '(?<=### @)(.*)(?= \(White\))')"
+          BLACK="$(echo '${{ steps.fcc.outputs.comment-body }}' | grep -oP '(?<=// @)(.*)(?= \(Black\))')"
+          echo "::set-output name=white::WHITE"
+          echo "::set-output name=black::BLACK"
 
       - name: Parse Move and Board
         id: parser
