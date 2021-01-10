@@ -26,8 +26,8 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            ### New Game!
-            @${{ steps.color.outputs.white }} (White) // @${{ steps.color.outputs.black }} (Black)
+            ## New Game!
+            ### @${{ steps.color.outputs.white }} (White) // @${{ steps.color.outputs.black }} (Black)
       - name: Create initial board
         id: board
         run: |
