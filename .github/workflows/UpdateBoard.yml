@@ -32,8 +32,12 @@ jobs:
           FEN="$(python3 ./scripts/chessmove.py '${{steps.parser.outputs.current_fen}}' '${{github.event.comment.body}}')"
           echo "::set-output name=fen::$FEN"
 
-          TOPLAY="$(echo $FEN | cut -d' ' -f2 )"
-          echo "::set-output name=toplay::$TOPLAY"
+          toplay="$(echo $FEN | cut -d' ' -f2 )"
+          if [ ${toplay} == "w" ]; then
+              echo "::set-output name=toplay::White"
+          elif [ ${toplay} == "b" ]; then
+              echo "::set-output name=toplay::Black"
+          fi
       - name: Show Move
         id: board
         run: |
