@@ -27,7 +27,7 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             ### New Game!
-            @${{ steps.color.outputs.white }} (white) vs @${{ steps.color.outputs.black }} (black)
+            @${{ steps.color.outputs.white }} (White) // @${{ steps.color.outputs.black }} (Black)
       - name: Create initial board
         id: board
         run: |
@@ -41,6 +41,7 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            ### Board: White to Play
-            > `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`
+            ## Board
+            ### White to Play
+            `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`
             ${{ steps.board.outputs.board }}

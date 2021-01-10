@@ -24,7 +24,7 @@ jobs:
       - name: Parse Move and Board
         id: parser
         run: |
-          CURRFEN="$(echo '${{ steps.fc.outputs.comment-body }}' | grep '>' | tr -d '>`')"
+          CURRFEN="$(echo '${{ steps.fc.outputs.comment-body }}' | grep '`' | tr -d '`')"
           echo "::set-output name=current_fen::$CURRFEN"
       - name: Play Move
         id: fen
@@ -66,8 +66,9 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           edit-mode: replace
           body: |
-            ### Board: ${{ steps.fen.outputs.header }}
-            > `${{steps.fen.outputs.fen}}`
+            ## Board
+            ### ${{ steps.fen.outputs.header }}
+            `${{steps.fen.outputs.fen}}`
             ${{ steps.board.outputs.board }}
 
       - name: React to Invalid Moves
