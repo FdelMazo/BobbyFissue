@@ -36,7 +36,7 @@ jobs:
       - name: Parse Move and Board
         id: parser
         run: |
-          CURRFEN="$(echo '${{ steps.fcb.outputs.comment-body }}' | grep '`' | tr -d '`')"
+          CURRFEN="$(echo '${{ steps.fcb.outputs.comment-body }}' | grep -oP '(?<=`)(.*)(?=`)')"
           echo "::set-output name=current_fen::$CURRFEN"
       - name: Play Move
         id: fen
