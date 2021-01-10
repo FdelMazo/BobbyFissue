@@ -41,15 +41,15 @@ jobs:
               echo "::set-output name=header::Black to Play"
           fi
 
-          if [ ${customfen} == "/" ]; then
+          if [ ${customfen} == "I" ]; then
               echo "::set-output name=invalid::true"
-          elif [ ${customfen} == "+" ]; then
+          elif [ ${customfen} == "W" ]; then
             if [ ${toplay} == "w" ]; then
                 echo "::set-output name=header::Black Wins!"
             elif [ ${toplay} == "b" ]; then
                 echo "::set-output name=header::White Wins!"
             fi
-          elif [ ${customfen} == "-" ]; then
+          elif [ ${customfen} == "D" ]; then
               echo "::set-output name=header::Draw!"
           fi
       - name: Show Move

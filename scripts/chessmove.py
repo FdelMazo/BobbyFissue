@@ -16,11 +16,11 @@ except ValueError:
 res = board.fen()
 
 if invalid_move:
-	res = f"{res} /"
+	res = f"{res} I"
 
 if board.is_checkmate():
-	res = f"{res} +"
+	res = f"{res} W"
 elif board.is_stalemate() or board.is_insufficient_material():
-	res = f"{res} -"
+	res = f"{res} D"
 
 print(res)
