@@ -42,5 +42,5 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             ### Board: White to Play
-
+            > `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`
             ${{ steps.board.outputs.board }}
