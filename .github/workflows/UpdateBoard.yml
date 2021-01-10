@@ -35,8 +35,8 @@ jobs:
         run: |
           WHITE="$(echo '${{ steps.fcc.outputs.comment-body }}' | grep -oP '(?<=### @)(.*)(?= \(White\))')"
           BLACK="$(echo '${{ steps.fcc.outputs.comment-body }}' | grep -oP '(?<=// @)(.*)(?= \(Black\))')"
-          echo "::set-output name=white::WHITE"
-          echo "::set-output name=black::BLACK"
+          echo "::set-output name=white::$WHITE"
+          echo "::set-output name=black::$BLACK"
 
       - name: Parse Board
         id: parser
@@ -106,7 +106,7 @@ jobs:
         if: ${{ steps.fen.outputs.draw || steps.fen.outputs.winner }}
         id: labeler
         run: |
-          if [ ${{steps.fen.outputs.draw}} ]; then
+          if [ "${{steps.fen.outputs.draw}}" = true ]; then
             echo "::set-output name=label::draw"
           elif [ ${{steps.fen.outputs.winner}} == "Black" ]; then
             if [ ${{steps.colors.outputs.black}} == ${{ github.event.repository.owner.login }} ]; then
