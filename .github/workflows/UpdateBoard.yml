@@ -10,6 +10,11 @@ jobs:
     if: startsWith(github.event.issue.title, '[CHESS]')
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+      - uses: BSFishy/pip-action@v1
+        with:
+          packages: chess
+
       - name: Find Player Comment
         uses: peter-evans/find-comment@v1
         id: fcc
@@ -17,11 +22,6 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           comment-author: "github-actions[bot]"
           body-includes: "## New Game!"
-      - name: Find Player Colors
-        id: colors
-        run: |
-          echo "::set-output name=white::${{ github.event.repository.owner.login }}"
-          echo "::set-output name=black::${{ github.event.issue.user.login }}"
       - name: Find Board Comment
         uses: peter-evans/find-comment@v1
         id: fcb
@@ -29,10 +29,13 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           comment-author: "github-actions[bot]"
           body-includes: "## Board"
-      - uses: actions/setup-python@v1
-      - uses: BSFishy/pip-action@v1
-        with:
-          packages: chess
+
+      - name: Find Player Colors
+        id: colors
+        run: |
+          echo "::set-output name=white::${{ github.event.repository.owner.login }}"
+          echo "::set-output name=black::${{ github.event.issue.user.login }}"
+
       - name: Parse Move and Board
         id: parser
         run: |
@@ -84,6 +87,7 @@ jobs:
             ### ${{ steps.fen.outputs.header }}
             `${{steps.fen.outputs.fen}}`
             ${{ steps.board.outputs.board }}
+
       - name: React to Invalid Moves
         if: ${{ steps.fen.outputs.invalid }}
         uses: peter-evans/create-or-update-comment@v1
