@@ -122,9 +122,9 @@ jobs:
             fi
           fi
 
-        - name: Apply Label to closed issue
-          uses: actions-ecosystem/action-add-labels@v1
-          if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
-          with:
+      - name: Apply Label to closed issue
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
+        with:
           github_token: ${{ secrets.github_token }}
           labels: ${{steps.labeler.outputs.label}}
