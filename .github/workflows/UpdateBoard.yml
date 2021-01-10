@@ -53,9 +53,9 @@ jobs:
           customfen="$(echo $FEN | cut -d' ' -f7 )"
 
           if [ ${toplay} == "w" ]; then
-              echo "::set-output name=header::White to Play"
+              echo "::set-output name=header::White to Move"
           elif [ ${toplay} == "b" ]; then
-              echo "::set-output name=header::Black to Play"
+              echo "::set-output name=header::Black to Move"
           fi
 
           if [ ${customfen} == "I" ]; then
