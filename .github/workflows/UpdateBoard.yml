@@ -106,23 +106,22 @@ jobs:
         if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
         id: labeler
         run: |
-          if [[ ${{steps.fen.outputs.draw}} ]]; then
-              echo "::set-output name=label::draw"
+          if [ ${{steps.fen.outputs.draw}} ]; then
+            echo "::set-output name=label::draw"
           elif [ ${{steps.fen.outputs.winner}} == "Black" ]; then
             if [ ${{steps.colors.outputs.black}} == ${{ github.event.repository.owner.login }} ]; then
               echo "::set-output name=label::win"
-            fi
-            if [ ${{steps.colors.outputs.black}} == ${{ github.event.issue.user.login }} ]; then
+            elif [ ${{steps.colors.outputs.black}} == ${{ github.event.issue.user.login }} ]; then
               echo "::set-output name=label::lose"
             fi
           elif [ ${{steps.fen.outputs.winner}} == "White" ]; then
             if [ ${{steps.colors.outputs.white}} == ${{ github.event.repository.owner.login }} ]; then
               echo "::set-output name=label::win"
-            fi
-            if [ ${{steps.colors.outputs.white}} == ${{ github.event.issue.user.login }} ]; then
+            elif [ ${{steps.colors.outputs.white}} == ${{ github.event.issue.user.login }} ]; then
               echo "::set-output name=label::lose"
             fi
           fi
+
         - name: Apply Label to closed issue
           uses: actions-ecosystem/action-add-labels@v1
           if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
