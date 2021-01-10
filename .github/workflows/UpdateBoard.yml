@@ -98,12 +98,12 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: confused
       - name: Close finished games
-        if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
+        if: ${{ steps.fen.outputs.draw || steps.fen.outputs.winner }}
         uses: peter-evans/close-issue@v1
         with:
           issue-number: ${{ github.event.issue.number }}
       - name: Decide label
-        if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
+        if: ${{ steps.fen.outputs.draw || steps.fen.outputs.winner }}
         id: labeler
         run: |
           if [ ${{steps.fen.outputs.draw}} ]; then
@@ -124,7 +124,7 @@ jobs:
 
       - name: Apply Label to closed issue
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ steps.fen.outputs.draw }} || ${{ steps.fen.outputs.winner }}
+        if: ${{ steps.fen.outputs.draw || steps.fen.outputs.winner }}
         with:
           github_token: ${{ secrets.github_token }}
           labels: ${{steps.labeler.outputs.label}}
