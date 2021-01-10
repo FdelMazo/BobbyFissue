@@ -32,7 +32,7 @@ jobs:
           FEN="$(python3 ./scripts/chessmove.py '${{steps.parser.outputs.current_fen}}' '${{github.event.comment.body}}')"
           echo "::set-output name=fen::$FEN"
 
-          TOPLAY="$(echo '$FEN' | cut -d' ' -f2 )"
+          TOPLAY="$(echo $FEN | cut -d' ' -f2 )"
           echo "::set-output name=toplay::$TOPLAY"
       - name: Show Move
         id: board
