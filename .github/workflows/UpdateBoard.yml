@@ -32,7 +32,7 @@ jobs:
           FEN="$(python3 ./scripts/chessmove.py '${{steps.parser.outputs.current_fen}}' '${{github.event.comment.body}}')"
           echo "::set-output name=fen::$FEN"
 
-          toplay="$(echo '${{steps.fen.outputs.fen}}' | cut -d' ' -f2 )"
+          toplay="$(echo '$FEN' | cut -d' ' -f2 )"
           if [[ ${toplay} -eq w ]]; then
               echo "::set-output name=toplay::White"
           elif [[ ${toplay} -eq b ]]; then
