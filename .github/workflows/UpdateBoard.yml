@@ -74,5 +74,5 @@ jobs:
         if: ${{ steps.fen.outputs.invalid }}
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
+          comment-id: ${{ github.event.comment.id }}
           reactions: confused
