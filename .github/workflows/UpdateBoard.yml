@@ -33,7 +33,7 @@ jobs:
           echo "::set-output name=fen::$FEN"
 
           TOPLAY="$(echo '$FEN' | cut -d' ' -f2 )"
-          echo "::set-output name=toplay::TOPLAY"
+          echo "::set-output name=toplay::$TOPLAY"
       - name: Show Move
         id: board
         run: |
