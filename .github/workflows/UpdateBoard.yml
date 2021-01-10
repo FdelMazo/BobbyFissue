@@ -36,21 +36,21 @@ jobs:
           customfen="$(echo $FEN | cut -d' ' -f7 )"
 
           if [ ${toplay} == "w" ]; then
-              echo "::set-output name=header::'White to Play'"
+              echo "::set-output name=header::White to Play"
           elif [ ${toplay} == "b" ]; then
-              echo "::set-output name=header::'Black to Play'"
+              echo "::set-output name=header::Black to Play"
           fi
 
           if [ ${customfen} == "/" ]; then
               echo "::set-output name=invalid::true"
           elif [ ${customfen} == "+" ]; then
             if [ ${toplay} == "w" ]; then
-                echo "::set-output name=header::'Black Wins!'"
+                echo "::set-output name=header::Black Wins!"
             elif [ ${toplay} == "b" ]; then
-                echo "::set-output name=header::'White Wins!'"
+                echo "::set-output name=header::White Wins!"
             fi
           elif [ ${customfen} == "-" ]; then
-              echo "::set-output name=header::'Draw!'"
+              echo "::set-output name=header::Draw!"
           fi
       - name: Show Move
         id: board
