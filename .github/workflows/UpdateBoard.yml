@@ -31,6 +31,13 @@ jobs:
         run: |
           FEN="$(python3 ./scripts/chessmove.py '${{steps.parser.outputs.current_fen}}' '${{github.event.comment.body}}')"
           echo "::set-output name=fen::$FEN"
+
+          toplay="$(echo '${FEN}' | cut -d' ' -f2 )"
+          if [[ ${toplay} -eq w ]]; then
+              echo "::set-output name=toplay::White"
+          elif [[ ${res} -eq b ]]; then
+              echo "::set-output name=toplay::Black"
+          fi
       - name: Show Move
         id: board
         run: |
@@ -45,6 +52,6 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           edit-mode: replace
           body: |
-            ### Board: ${{ steps.fc.outputs.comment-id }} to Play
+            ### Board: ${{ steps.fen.outputs.toplay }} to Play
             > `${{steps.fen.outputs.fen}}`
             ${{ steps.board.outputs.board }}
