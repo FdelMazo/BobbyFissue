@@ -1,0 +1,3 @@
+[submodule "fen2md"]
+	path = fen2md
+	url = git@gist.github.com:5179446e62ffa1c60e3cc53cc63f0ab7.git
