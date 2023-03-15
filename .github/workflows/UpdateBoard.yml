@@ -9,21 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.event.issue.title, '[CHESS]')
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
       - uses: BSFishy/pip-action@v1
         with:
           packages: chess
 
       - name: Find Player Comment
-        uses: peter-evans/find-comment@v1
+        uses: peter-evans/find-comment@v2
         id: fcc
         with:
           issue-number: ${{ github.event.issue.number }}
           comment-author: "github-actions[bot]"
           body-includes: "## New Game!"
       - name: Find Board Comment
-        uses: peter-evans/find-comment@v1
+        uses: peter-evans/find-comment@v2
         id: fcb
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -35,42 +35,42 @@ jobs:
         run: |
           WHITE="$(echo '${{ steps.fcc.outputs.comment-body }}' | grep -oP '(?<=### @)(.*)(?= \(White\))')"
           BLACK="$(echo '${{ steps.fcc.outputs.comment-body }}' | grep -oP '(?<=// @)(.*)(?= \(Black\))')"
-          echo "::set-output name=white::$WHITE"
-          echo "::set-output name=black::$BLACK"
+          echo "white=$WHITE" >> $GITHUB_OUTPUT
+          echo "black=$BLACK" >> $GITHUB_OUTPUT
 
       - name: Parse Board
         id: parser
         run: |
           CURRFEN="$(echo '${{ steps.fcb.outputs.comment-body }}' | grep -oP '(?<=`)(.*)(?=`)')"
-          echo "::set-output name=current_fen::$CURRFEN"
+          echo "current_fen=$CURRFEN" >> $GITHUB_OUTPUT
       - name: Play Move
         id: fen
         run: |
           FEN="$(python3 ./scripts/chessmove.py '${{steps.parser.outputs.current_fen}}' '${{github.event.comment.body}}')"
-          echo "::set-output name=fen::$FEN"
+          echo "fen=$FEN" >> $GITHUB_OUTPUT
 
           toplay="$(echo $FEN | cut -d' ' -f2 )"
           customfen="$(echo $FEN | cut -d' ' -f7 )"
 
           if [ ${toplay} == "w" ]; then
-              echo "::set-output name=header::White to Move"
+              echo "header=:White to Move" >> $GITHUB_OUTPUT
           elif [ ${toplay} == "b" ]; then
-              echo "::set-output name=header::Black to Move"
+              echo "header=:Black to Move" >> $GITHUB_OUTPUT
           fi
 
           if [ ${customfen} == "I" ]; then
-              echo "::set-output name=invalid::true"
+              echo "invalid=:true" >> $GITHUB_OUTPUT
           elif [ ${customfen} == "W" ]; then
             if [ ${toplay} == "w" ]; then
-                echo "::set-output name=winner::Black"
-                echo "::set-output name=header::Black Wins!"
+                echo "winner=:Black" >> $GITHUB_OUTPUT
+                echo "header=:Black Wins!" >> $GITHUB_OUTPUT
             elif [ ${toplay} == "b" ]; then
-                echo "::set-output name=winner::White"
-                echo "::set-output name=header::White Wins!"
+                echo "winner=:White" >> $GITHUB_OUTPUT
+                echo "header=:White Wins!" >> $GITHUB_OUTPUT
             fi
           elif [ ${customfen} == "D" ]; then
-            echo "::set-output name=draw::true"
-            echo "::set-output name=header::Draw!"
+            echo "draw=:true" >> $GITHUB_OUTPUT
+            echo "header=:Draw!" >> $GITHUB_OUTPUT
           fi
       - name: Convert Move to md
         id: board
@@ -79,9 +79,9 @@ jobs:
           BOARD="${BOARD//'%'/'%25'}"
           BOARD="${BOARD//$'\n'/'%0A'}"
           BOARD="${BOARD//$'\r'/'%0D'}"
-          echo "::set-output name=board::$BOARD"
+          echo "board=$BOARD" >> $GITHUB_OUTPUT
       - name: Edit Board Comment
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v2
         with:
           comment-id: ${{ steps.fcb.outputs.comment-id }}
           edit-mode: replace
@@ -93,13 +93,13 @@ jobs:
 
       - name: React to Invalid Moves
         if: ${{ steps.fen.outputs.invalid }}
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v2
         with:
           comment-id: ${{ github.event.comment.id }}
           reactions: confused
       - name: Close finished games
         if: ${{ steps.fen.outputs.draw || steps.fen.outputs.winner }}
-        uses: peter-evans/close-issue@v1
+        uses: peter-evans/close-issue@v2
         with:
           issue-number: ${{ github.event.issue.number }}
       - name: Decide label
@@ -107,18 +107,18 @@ jobs:
         id: labeler
         run: |
           if [ "${{steps.fen.outputs.draw}}" = true ]; then
-            echo "::set-output name=label::draw"
+            echo "label=:draw" >> $GITHUB_OUTPUT
           elif [ ${{steps.fen.outputs.winner}} == "Black" ]; then
             if [ ${{steps.colors.outputs.black}} == ${{ github.event.repository.owner.login }} ]; then
-              echo "::set-output name=label::win"
+              echo "label=:win" >> $GITHUB_OUTPUT
             elif [ ${{steps.colors.outputs.black}} == ${{ github.event.issue.user.login }} ]; then
-              echo "::set-output name=label::lose"
+              echo "label=:lose" >> $GITHUB_OUTPUT
             fi
           elif [ ${{steps.fen.outputs.winner}} == "White" ]; then
             if [ ${{steps.colors.outputs.white}} == ${{ github.event.repository.owner.login }} ]; then
-              echo "::set-output name=label::win"
+              echo "label=:win" >> $GITHUB_OUTPUT
             elif [ ${{steps.colors.outputs.white}} == ${{ github.event.issue.user.login }} ]; then
-              echo "::set-output name=label::lose"
+              echo "label=:lose" >> $GITHUB_OUTPUT
             fi
           fi
 
