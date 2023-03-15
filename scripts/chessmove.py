@@ -2,7 +2,7 @@ import sys
 import chess
 
 fen = sys.argv[1].strip()
-move = sys.argv[2]
+move = sys.argv[2].strip()
 
 # Remove the 'custom fen' attribute (a last letter, I W or D which indicates InvalidMove, Win or Draw)
 attrs = fen.split(' ')
