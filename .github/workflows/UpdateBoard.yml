@@ -11,9 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-      - uses: BSFishy/pip-action@v1
         with:
-          packages: chess
+          python-version: '3.10'
+      - run: pip install chess
 
       - name: Find Player Comment
         uses: peter-evans/find-comment@v2
@@ -46,7 +46,7 @@ jobs:
       - name: Play Move
         id: fen
         run: |
-          FEN="$(python3 ./scripts/chessmove.py '${{steps.parser.outputs.current_fen}}' '${{github.event.comment.body}}')"
+          FEN="$(python ./scripts/chessmove.py '${{steps.parser.outputs.current_fen}}' '${{github.event.comment.body}}')"
           echo "fen=$FEN" >> $GITHUB_OUTPUT
 
           toplay="$(echo $FEN | cut -d' ' -f2 )"
@@ -75,7 +75,7 @@ jobs:
       - name: Convert Move to md
         id: board
         run: |
-          BOARD="$(python3 ./scripts/fen2md.py '${{steps.fen.outputs.fen}}' | python3 ./scripts/replace_images.py)"
+          BOARD="$(python ./scripts/fen2md.py '${{steps.fen.outputs.fen}}' | python ./scripts/replace_images.py)"
           BOARD="${BOARD//'%'/'%25'}"
           BOARD="${BOARD//$'\n'/'%0A'}"
           BOARD="${BOARD//$'\r'/'%0D'}"
