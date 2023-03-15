@@ -76,7 +76,9 @@ jobs:
         id: board
         run: |
           BOARD="$(python ./scripts/fen2md.py '${{steps.fen.outputs.fen}}' | python ./scripts/replace_images.py)"
-          echo "board=$BOARD" >> $GITHUB_OUTPUT
+          echo "board<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$BOARD" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
       - name: Edit Board Comment
         uses: peter-evans/create-or-update-comment@v2
         with:

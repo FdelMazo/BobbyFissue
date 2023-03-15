@@ -32,7 +32,9 @@ jobs:
         id: board
         run: |
           BOARD="$(python3 ./scripts/fen2md.py 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' | python3 ./scripts/replace_images.py)"
-          echo "board=$BOARD" >> $GITHUB_OUTPUT
+          echo "board<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$BOARD" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
       - name: Add Comment w/Board
         uses: peter-evans/create-or-update-comment@v2
         with:
